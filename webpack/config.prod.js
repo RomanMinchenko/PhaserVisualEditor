@@ -13,7 +13,7 @@ module.exports = {
     mode: "production",
     entry: "./src/main.ts",
     output: {
-        path: path.resolve(process.cwd(), 'dist'),
+        path: path.resolve(process.cwd(), 'docs'),
         filename: "./bundle.min.js"
     },
     resolve: {
@@ -61,7 +61,9 @@ module.exports = {
         ]
     },
     plugins: [
-        new CleanWebpackPlugin(),
+        new CleanWebpackPlugin({
+            cleanOnceBeforeBuildPatterns: [path.join(__dirname, "docs/**/*")]
+        }),
         new webpack.DefinePlugin({
             "typeof CANVAS_RENDERER": JSON.stringify(true),
             "typeof WEBGL_RENDERER": JSON.stringify(true),
@@ -79,7 +81,8 @@ module.exports = {
             patterns: [
                 { from: 'public/assets', to: 'assets' },
                 { from: 'public/favicon.png', to: 'favicon.png' },
-                { from: 'public/style.css', to: 'style.css' }
+                { from: 'public/style.css', to: 'style.css' },
+                { from: 'public/atlas', to: 'atlas' }
             ],
         }),
     ]

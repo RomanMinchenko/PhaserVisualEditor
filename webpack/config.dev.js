@@ -8,7 +8,7 @@ module.exports = {
     devtool: "eval-source-map",
     entry: "./src/main.ts",
     output: {
-        path: path.resolve(process.cwd(), 'dist'),
+        path: path.resolve(process.cwd(), 'docs'),
         filename: "bundle.min.js"
     },
     resolve: {
@@ -41,7 +41,7 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin({
-            cleanOnceBeforeBuildPatterns: [path.join(__dirname, "dist/**/*")]
+            cleanOnceBeforeBuildPatterns: [path.join(__dirname, "docs/**/*")]
         }),
         new webpack.DefinePlugin({
             "typeof CANVAS_RENDERER": JSON.stringify(true),
