@@ -24,6 +24,7 @@ export default class EditorPanel {
   private tweakerX: number;
   private tweakerWidth: number;
   private tweaker: any;
+  private selectedItem: IEditorItem | null;
   private dragHandle: Phaser.GameObjects.Graphics | null;
   private dragDots: Phaser.GameObjects.Text | null;
 
@@ -32,8 +33,21 @@ export default class EditorPanel {
     this.tweakerX = 0;
     this.tweakerWidth = 0;
     this.tweaker = null;
+    this.selectedItem = null;
     this.dragHandle = null;
     this.dragDots = null;
+  }
+
+  public setAlpha(alpha: number) {
+    if (this.tweaker) {
+      this.tweaker.setAlpha(alpha);
+    }
+    if (this.dragHandle) {
+      this.dragHandle.setAlpha(alpha);
+    }
+    if (this.dragDots) {
+      this.dragDots.setAlpha(alpha);
+    }
   }
 
   public updateLayout(sceneWidth: number) {
@@ -42,6 +56,8 @@ export default class EditorPanel {
   }
 
   public build(item: IEditorItem | null, items: IEditorItem[], callbacks: IEditorPanelCallbacks) {
+    if (item?.cfg.key === this.selectedItem?.cfg.key && this.tweaker) return;
+
     if (this.tweaker) {
       this.tweaker.destroy();
       this.tweaker = null;
@@ -54,6 +70,7 @@ export default class EditorPanel {
 
     const data = item.data;
     this.tweaker = this.createTweaker();
+    this.selectedItem = item;
 
     this.addSelectedElementSection(data);
     this.addTransformSection(item, data, callbacks);

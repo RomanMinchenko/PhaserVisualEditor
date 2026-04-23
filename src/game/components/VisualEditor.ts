@@ -126,10 +126,18 @@ export default class VisualEditor {
       (go as any).setInteractive({ useHandCursor: true });
       (dragPlugin as any).add(go);
 
+      (go as any).on('dragstart', () => {
+      });
+      
       (go as any).on('drag', () => {
         data.position.x = Math.round((go as any).x);
         data.position.y = Math.round((go as any).y);
+        this.editorPanel.setAlpha(0.1);
         this.updateSelectionRect(item);
+      });
+
+      (go as any).on('dragend', () => {
+        this.editorPanel.setAlpha(1);
       });
 
       (go as any).on('pointerdown', () => {
@@ -195,6 +203,8 @@ export default class VisualEditor {
           return;
         }
 
+        this.editorPanel.setAlpha(0.1);
+
         const bounds = (this.selectedItem.gameObject as any).getBounds();
         this.resizeState = {
           handleType: type,
@@ -211,6 +221,7 @@ export default class VisualEditor {
 
       handle.on('dragend', () => {
         this.resizeState = null;
+        this.editorPanel.setAlpha(1);
         this.scene.input.setDefaultCursor('default');
       });
 
