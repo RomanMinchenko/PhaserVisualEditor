@@ -73,7 +73,7 @@ export default class EditorPanel {
     this.tweaker = this.createTweaker();
     this.selectedItem = item;
 
-    this.addSelectedElementSection(data);
+    this.addSelectedElementSection(data, callbacks);
     this.addTransformSection(item, data, callbacks);
 
     if (data.data.frame) {
@@ -164,13 +164,18 @@ export default class EditorPanel {
     }).setOrigin(0, 0);
   }
 
-  private addSelectedElementSection(data: any) {
+  private addSelectedElementSection(data: any, callbacks: IEditorPanelCallbacks) {
     const itemMeta = {
       name: data.key,
     };
 
     this.tweaker.addFolder({ title: 'Selected element', expanded: true })
       .addInput(itemMeta, 'name', { title: 'Name', readOnly: true })
+      .addButton({
+        title: 'Close',
+        label: 'х',
+        callback: () => callbacks.onSelectItem(null)
+      });
   }
 
   private addTransformSection(item: IEditorItem, data: any, callbacks: IEditorPanelCallbacks) {

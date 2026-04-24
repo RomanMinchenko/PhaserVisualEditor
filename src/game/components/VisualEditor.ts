@@ -76,17 +76,23 @@ export default class VisualEditor {
   }
 
   private buildTweaker(item: IEditorItem | null) {
+    const callbacks = this.getPanelCallbacks();
     if (!item) {
       this.panelHint?.setVisible(true);
+      this.editorPanel.build(null, this.items, callbacks);
       return;
     }
     this.panelHint?.setVisible(false);
-    this.editorPanel.build(item, this.items, {
-      onUpdateSelectionRect: (target) => this.updateSelectionRect(target),
-      onSelectItem: (target) => this.selectItem(target),
+    this.editorPanel.build(item, this.items, callbacks);
+  }
+
+  private getPanelCallbacks() {
+    return {
+      onUpdateSelectionRect: (target: IEditorItem | null) => this.updateSelectionRect(target),
+      onSelectItem: (target: IEditorItem | null) => this.selectItem(target),
       onExportJSON: () => this.exportJSON(),
-      onShowToast: (message) => this.showToast(message),
-      onUploadImage: async (target) => {
+      onShowToast: (message: string) => this.showToast(message),
+      onUploadImage: async (target: IEditorItem) => {
         const selectedImage = await this.uploadedImageManager.selectAndAssignImage(target.data.key);
         if (!selectedImage) {
           return;
@@ -96,7 +102,7 @@ export default class VisualEditor {
         this.applyUploadedTexture(target, selectedImage.textureKey, selectedImage.width, selectedImage.height);
         this.updateSelectionRect(target);
       }
-    });
+    };
   }
 
   private spawnItems(config: IConfig[]) {
@@ -108,6 +114,7 @@ export default class VisualEditor {
       const { width, height } = go.getBounds();
       go.setSize(width, height);
       this.scene.add.existing(go);
+      this.updateInteractiveZone(go, width, height);
 
       const data: IConfig = {
         key: cfg.key,
@@ -287,6 +294,7 @@ export default class VisualEditor {
         item.data.data.frame.nineSlice.height = Math.round(targetHeight);
       }
       visual.setSize(targetWidth, targetHeight);
+      this.updateInteractiveZone(visual, targetWidth, targetHeight);
     } else {
       const currentWidth = spriteView.displayWidth || spriteView.width;
       const currentHeight = spriteView.displayHeight || spriteView.height;
@@ -303,6 +311,7 @@ export default class VisualEditor {
         item.data.data.frame.size.height = Math.round(proportionalHeight);
       }
       visual.setSize(proportionalWidth, proportionalHeight);
+      this.updateInteractiveZone(visual, proportionalWidth, proportionalHeight);
     }
 
     this.updateSelectionRect(item);
@@ -351,7 +360,17 @@ export default class VisualEditor {
   }
 
   private updateInteractiveZone(visual: any, width: number, height: number) {
-    const hitArea = new Phaser.Geom.Rectangle(-width / 2, -height / 2, width, height);
-    visual.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+    const hitArea = new Phaser.Geom.Rectangle(0, 0, width, height);
+    if (!visual.input) {
+      visual.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+    } else {
+      if (visual.input.hitArea && typeof visual.input.hitArea.setTo === 'function') {
+        visual.input.hitArea.setTo(0, 0, width, height);
+      } else {
+        visual.input.hitArea = hitArea;
+      }
+      visual.input.hitAreaCallback = Phaser.Geom.Rectangle.Contains;
+    }
+    visual.input.cursor = 'pointer';
   }
 }
