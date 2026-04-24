@@ -3,6 +3,7 @@ export interface IConfig {
   data: {
     frame?: {
       value: string;
+      sourceImageId?: string;
       nineSlice?: {
         width: number;
         height: number;

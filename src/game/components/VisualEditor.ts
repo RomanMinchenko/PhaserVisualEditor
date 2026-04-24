@@ -1,6 +1,7 @@
 import { IConfig } from "./interfaces";
 import VisualComponent from "./VisualComponent";
 import EditorPanel, { IEditorItem } from "./EditorPanel";
+import UploadedImageManager from "./UploadedImageManager";
 
 export default class VisualEditor {
   public panelTitle: Phaser.GameObjects.Text | null;
@@ -19,6 +20,7 @@ export default class VisualEditor {
     startHeight: number;
   } | null;
   private panelHint: Phaser.GameObjects.Text | null;
+  private uploadedImageManager: UploadedImageManager;
 
   constructor(scene: Phaser.Scene, config: IConfig[]) {
     this.scene = scene;
@@ -30,7 +32,7 @@ export default class VisualEditor {
     this.resizeState = null;
     this.panelTitle = null;
     this.panelHint = null;
-
+    this.uploadedImageManager = new UploadedImageManager(scene);
 
     this.initBg();
     this.createSelectionRect();
@@ -83,7 +85,17 @@ export default class VisualEditor {
       onUpdateSelectionRect: (target) => this.updateSelectionRect(target),
       onSelectItem: (target) => this.selectItem(target),
       onExportJSON: () => this.exportJSON(),
-      onShowToast: (message) => this.showToast(message)
+      onShowToast: (message) => this.showToast(message),
+      onUploadImage: async (target) => {
+        const selectedImage = await this.uploadedImageManager.selectAndAssignImage(target.data.key);
+        if (!selectedImage) {
+          return;
+        }
+
+        this.uploadedImageManager.applyImageToConfig(target.data, selectedImage.id);
+        this.applyUploadedTexture(target, selectedImage.textureKey, selectedImage.width, selectedImage.height);
+        this.updateSelectionRect(target);
+      }
     });
   }
 
@@ -128,7 +140,7 @@ export default class VisualEditor {
 
       (go as any).on('dragstart', () => {
       });
-      
+
       (go as any).on('drag', () => {
         data.position.x = Math.round((go as any).x);
         data.position.y = Math.round((go as any).y);
@@ -172,10 +184,12 @@ export default class VisualEditor {
     });
   }
 
-  public exportJSON() {
-    return this.items.map(({ data }) => {
-      return data;
-    });
+  public async exportJSON() {
+    const uploadedImages = await this.uploadedImageManager.uploadAll();
+    return {
+      items: this.items.map(({ data }) => data),
+      uploadedImages
+    };
   }
 
   private createResizeHandles() {
@@ -292,5 +306,52 @@ export default class VisualEditor {
     }
 
     this.updateSelectionRect(item);
+  }
+
+  private applyUploadedTexture(item: IEditorItem, textureKey: string, imageWidth: number, imageHeight: number) {
+    const visual = item.gameObject as any;
+    const frameConfig = item.data.data.frame;
+    const currentSprite = visual.spriteView as Phaser.GameObjects.Sprite | Phaser.GameObjects.NineSlice;
+
+    if (!currentSprite || !frameConfig) {
+      return;
+    }
+
+    if (currentSprite instanceof Phaser.GameObjects.NineSlice) {
+      currentSprite.destroy();
+
+      const replacementSprite = this.scene.add.sprite(0, 0, textureKey);
+      replacementSprite.setOrigin(0.5);
+      replacementSprite.setDisplaySize(imageWidth, imageHeight);
+
+      visual.addAt(replacementSprite, 0);
+      visual.spriteView = replacementSprite;
+      visual.setSize(imageWidth, imageHeight);
+      this.updateInteractiveZone(visual, imageWidth, imageHeight);
+
+      delete frameConfig.nineSlice;
+      frameConfig.size = {
+        width: Math.round(imageWidth),
+        height: Math.round(imageHeight)
+      };
+      frameConfig.value = textureKey;
+      return;
+    }
+
+    currentSprite.setTexture(textureKey);
+    currentSprite.setDisplaySize(imageWidth, imageHeight);
+    visual.setSize(imageWidth, imageHeight);
+    this.updateInteractiveZone(visual, imageWidth, imageHeight);
+
+    frameConfig.size = {
+      width: Math.round(imageWidth),
+      height: Math.round(imageHeight)
+    };
+    frameConfig.value = textureKey;
+  }
+
+  private updateInteractiveZone(visual: any, width: number, height: number) {
+    const hitArea = new Phaser.Geom.Rectangle(-width / 2, -height / 2, width, height);
+    visual.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
   }
 }

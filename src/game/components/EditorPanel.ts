@@ -9,8 +9,9 @@ export interface IEditorItem {
 interface IEditorPanelCallbacks {
   onUpdateSelectionRect: (item: IEditorItem | null) => void;
   onSelectItem: (item: IEditorItem | null) => void;
-  onExportJSON: () => unknown;
+  onExportJSON: () => Promise<unknown>;
   onShowToast: (message: string) => void;
+  onUploadImage: (item: IEditorItem) => Promise<void>;
 }
 
 const PANEL_SIDE_PADDING = 10;
@@ -219,17 +220,22 @@ export default class EditorPanel {
   private addAppearanceSection(item: IEditorItem, data: any, callbacks: IEditorPanelCallbacks) {
     const appearanceFolder = this.tweaker.addFolder({ title: 'Appearance', expanded: true });
 
-    appearanceFolder.addInput(data.data.frame, 'value', {
-      title: 'Frame',
+    const appearanceState = {
+      image: data.data.frame.sourceImageId ? 'Користувацьке зображення' : data.data.frame.value
+    };
+
+    appearanceFolder.addInput(appearanceState, 'image', {
+      title: 'Image',
       monitor: true,
-      options: [
-        { value: 'white_task_frame', text: 'White Frame' },
-        { value: 'blue_task_frame', text: 'Blue Frame' },
-        { value: 'green_task_frame', text: 'Green Frame' },
-        { value: 'red_task_frame', text: 'Red Frame' }
-      ],
-      onValueChange: (value: string) => {
-        (item.gameObject as any).spriteView.setTexture('assets', value);
+      readOnly: true
+    });
+
+    appearanceFolder.addButton({
+      title: 'Upload',
+      label: 'Завантажити',
+      callback: async () => {
+        await callbacks.onUploadImage(item);
+        appearanceState.image = data.data.frame.sourceImageId ? 'Користувацьке зображення' : data.data.frame.value;
       }
     });
 
@@ -379,8 +385,8 @@ export default class EditorPanel {
     this.tweaker.addButton({
       title: 'Actions',
       label: '📋 Copy JSON',
-      callback: () => {
-        const json = callbacks.onExportJSON();
+      callback: async () => {
+        const json = await callbacks.onExportJSON();
         console.log('%c[Export JSON]', 'color:#0f0', JSON.stringify(json, null, 2));
 
         if (navigator.clipboard) {
@@ -409,11 +415,11 @@ export default class EditorPanel {
 
     this.scene.input.setDraggable(this.dragHandle);
 
-this.dragHandle.on('drag', (_pointer: any, dragX: number, dragY: number) => {
-  const handleHeight = (this.dragHandle?.input?.hitArea as Phaser.Geom.Rectangle).height;
-  const targetPanelY = dragY + handleHeight + 4;
-  this.setPanelPosition(dragX, targetPanelY);
-});
+    this.dragHandle.on('drag', (_pointer: any, dragX: number, dragY: number) => {
+      const handleHeight = (this.dragHandle?.input?.hitArea as Phaser.Geom.Rectangle).height;
+      const targetPanelY = dragY + handleHeight + 4;
+      this.setPanelPosition(dragX, targetPanelY);
+    });
   }
 
   private clampPanelPosition(x: number, y: number) {
@@ -431,33 +437,33 @@ this.dragHandle.on('drag', (_pointer: any, dragX: number, dragY: number) => {
     };
   }
 
-private createDragHandle() {
-  this.destroyDragHandle();
+  private createDragHandle() {
+    this.destroyDragHandle();
 
-  const radius = 6;
-  const height = 20;
+    const radius = 6;
+    const height = 20;
 
-  this.dragHandle = this.scene.add.graphics();
-  this.dragHandle.fillStyle(0x1f2a44, 0.95);
-  this.dragHandle.fillRoundedRect(0, 0, this.tweakerWidth, height, radius);
-  this.dragHandle.lineStyle(1, 0x4a5a88);
-  this.dragHandle.strokeRoundedRect(0, 0, this.tweakerWidth, height, radius);
-  this.dragHandle.setPosition(this.tweaker.x, this.tweaker.y - 24);
+    this.dragHandle = this.scene.add.graphics();
+    this.dragHandle.fillStyle(0x1f2a44, 0.95);
+    this.dragHandle.fillRoundedRect(0, 0, this.tweakerWidth, height, radius);
+    this.dragHandle.lineStyle(1, 0x4a5a88);
+    this.dragHandle.strokeRoundedRect(0, 0, this.tweakerWidth, height, radius);
+    this.dragHandle.setPosition(this.tweaker.x, this.tweaker.y - 24);
 
-  const hitArea = new Phaser.Geom.Rectangle(0, 0, this.tweakerWidth, height);
-  this.dragHandle.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+    const hitArea = new Phaser.Geom.Rectangle(0, 0, this.tweakerWidth, height);
+    this.dragHandle.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
 
-  this.dragDots = this.scene.add.text(this.tweaker.x + this.tweakerWidth / 2, this.tweaker.y - 14, '⋮⋮⋮', {
-    fontSize: '18px',
-    color: '#b8c1ec',
-    fontFamily: 'monospace'
-  }).setOrigin(0.5);
+    this.dragDots = this.scene.add.text(this.tweaker.x + this.tweakerWidth / 2, this.tweaker.y - 14, '⋮⋮⋮', {
+      fontSize: '18px',
+      color: '#b8c1ec',
+      fontFamily: 'monospace'
+    }).setOrigin(0.5);
 
-  this.dragHandle.on('pointerover', () => this.scene.input.setDefaultCursor('grab'));
-  this.dragHandle.on('pointerdown', () => this.scene.input.setDefaultCursor('grabbing'));
-  this.dragHandle.on('pointerout', () => this.scene.input.setDefaultCursor('default'));
-  this.dragHandle.on('pointerup', () => this.scene.input.setDefaultCursor('grab'));
-}
+    this.dragHandle.on('pointerover', () => this.scene.input.setDefaultCursor('grab'));
+    this.dragHandle.on('pointerdown', () => this.scene.input.setDefaultCursor('grabbing'));
+    this.dragHandle.on('pointerout', () => this.scene.input.setDefaultCursor('default'));
+    this.dragHandle.on('pointerup', () => this.scene.input.setDefaultCursor('grab'));
+  }
 
   private setPanelPosition(x: number, y: number) {
     const { x: clampedX, y: clampedY } = this.clampPanelPosition(x, y);
