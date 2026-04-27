@@ -28,8 +28,6 @@ export default class EditorPanel {
   private selectedItem: IEditorItem | null;
   private dragHandle: Phaser.GameObjects.Graphics | null;
   private dragDots: Phaser.GameObjects.Text | null;
-  private closeButton: Phaser.GameObjects.Text | null;
-  private onCloseSelection: (() => void) | null;
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
@@ -39,8 +37,6 @@ export default class EditorPanel {
     this.selectedItem = null;
     this.dragHandle = null;
     this.dragDots = null;
-    this.closeButton = null;
-    this.onCloseSelection = null;
   }
 
   public setAlpha(alpha: number) {
@@ -52,9 +48,6 @@ export default class EditorPanel {
     }
     if (this.dragDots) {
       this.dragDots.setAlpha(alpha);
-    }
-    if (this.closeButton) {
-      this.closeButton.setAlpha(alpha);
     }
   }
 
@@ -77,7 +70,6 @@ export default class EditorPanel {
     }
 
     const data = item.data;
-    this.onCloseSelection = () => callbacks.onSelectItem(null);
     this.tweaker = this.createTweaker();
     this.selectedItem = item;
 
@@ -103,6 +95,37 @@ export default class EditorPanel {
     this.enableDragging();
 
     return this.tweaker;
+  }
+
+  public isPointerInside(pointer: Phaser.Input.Pointer) {
+    if (!this.tweaker) {
+      return false;
+    }
+
+    const pointerX = pointer.worldX;
+    const pointerY = pointer.worldY;
+    const tweakerBounds = this.tweaker.getBounds?.();
+    if (tweakerBounds && Phaser.Geom.Rectangle.Contains(tweakerBounds, pointerX, pointerY)) {
+      return true;
+    }
+
+    if (this.dragHandle) {
+      const dragHandleHitArea = this.dragHandle.input?.hitArea as Phaser.Geom.Rectangle | undefined;
+      if (dragHandleHitArea) {
+        const dragHandleBounds = new Phaser.Geom.Rectangle(
+          this.dragHandle.x,
+          this.dragHandle.y,
+          dragHandleHitArea.width,
+          dragHandleHitArea.height
+        );
+
+        if (Phaser.Geom.Rectangle.Contains(dragHandleBounds, pointerX, pointerY)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 
   private createTweaker() {
@@ -467,21 +490,6 @@ export default class EditorPanel {
       fontFamily: 'monospace'
     }).setOrigin(0.5);
 
-    const closeButtonX = this.tweaker.x + this.tweakerWidth - 14;
-    const closeButtonY = this.tweaker.y - 14;
-    this.closeButton = this.scene.add.text(closeButtonX, closeButtonY, '✕', {
-      fontSize: '18px',
-      color: '#ff4d4d',
-      fontFamily: 'monospace',
-      backgroundColor: '#4a0000',
-      padding: { x: 6, y: 1 }
-    }).setOrigin(0.5);
-    this.closeButton.setInteractive({ useHandCursor: true });
-    this.closeButton.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
-      pointer.event?.stopPropagation();
-      this.onCloseSelection?.();
-    });
-
     this.dragHandle.on('pointerover', () => this.scene.input.setDefaultCursor('grab'));
     this.dragHandle.on('pointerdown', () => this.scene.input.setDefaultCursor('grabbing'));
     this.dragHandle.on('pointerout', () => this.scene.input.setDefaultCursor('default'));
@@ -503,13 +511,6 @@ export default class EditorPanel {
         clampedY - handleHeight / 2 - 4
       );
     }
-    if (this.closeButton && this.dragHandle) {
-      const handleHeight = (this.dragHandle?.input?.hitArea as Phaser.Geom.Rectangle).height;
-      this.closeButton.setPosition(
-        clampedX + this.tweakerWidth - 14,
-        clampedY - handleHeight / 2 - 4
-      );
-    }
   }
 
   private destroyDragHandle() {
@@ -521,11 +522,6 @@ export default class EditorPanel {
     if (this.dragDots) {
       this.dragDots.destroy();
       this.dragDots = null;
-    }
-
-    if (this.closeButton) {
-      this.closeButton.destroy();
-      this.closeButton = null;
     }
   }
 }

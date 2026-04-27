@@ -38,6 +38,7 @@ export default class VisualEditor {
     this.createSelectionRect();
     this.buildPanel();
     this.spawnItems(config);
+    this.setupPanelAutoClose();
   }
 
   private initBg() {
@@ -174,6 +175,24 @@ export default class VisualEditor {
     this.updateSelectionRect(item);
     this.buildTweaker(item);
     this.bringSelectedToTop();
+  }
+
+  private setupPanelAutoClose() {
+    this.scene.input.on('pointerdown', (pointer: Phaser.Input.Pointer, currentlyOver: Phaser.GameObjects.GameObject[]) => {
+      if (!this.selectedItem) {
+        return;
+      }
+
+      const clickedEditorItem = currentlyOver.some((gameObject) =>
+        this.items.some((item) => item.gameObject === gameObject)
+      );
+
+      if (clickedEditorItem || this.editorPanel.isPointerInside(pointer)) {
+        return;
+      }
+
+      this.selectItem(null);
+    });
   }
 
   private showToast(message: string) {
