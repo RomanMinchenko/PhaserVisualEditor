@@ -1,13 +1,14 @@
-import { IConfig } from "../components/interfaces";
+import { IApplicationData } from "./interfaces";
 
 export default class InitialConfigLoader {
+  private apiUrl = 'https://backend.main.zeta.faino.dev/api';
   private endpointFactory: (id: string) => string;
 
-  constructor(endpointFactory: (id: string) => string = (id) => `/api/config/${id}`) {
+  constructor(endpointFactory: (id: string) => string = (id) => `/lms/public/interactive/exercises/${id}`) {
     this.endpointFactory = endpointFactory;
   }
 
-  public async loadByQueryParam(paramName = "id"): Promise<IConfig[] | null> {
+  public async loadByQueryParam(paramName = "id"): Promise<IApplicationData | null> {
     const id = this.getIdFromQuery(paramName);
 
     if (!id) {
@@ -15,14 +16,15 @@ export default class InitialConfigLoader {
     }
 
     try {
-      const response = await fetch(this.endpointFactory(id));
+      const response = await fetch(this.apiUrl + this.endpointFactory(id));
 
       if (!response.ok) {
         return null;
       }
 
       const payload = await response.json();
-      return this.isConfigList(payload) ? payload : null;
+
+      return payload as IApplicationData;
     } catch (_error) {
       return null;
     }
@@ -37,9 +39,5 @@ export default class InitialConfigLoader {
     }
 
     return id;
-  }
-
-  private isConfigList(payload: unknown): payload is IConfig[] {
-    return Array.isArray(payload);
   }
 }
