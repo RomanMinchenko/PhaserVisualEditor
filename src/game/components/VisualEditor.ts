@@ -69,6 +69,7 @@ export default class VisualEditor {
       ?.setVisible(true);
 
     this.updateResizeHandles(bounds);
+    this.bringSelectedToTop();
   }
 
   private buildPanel() {
@@ -155,9 +156,13 @@ export default class VisualEditor {
         this.updateSelectionRect(item);
       });
 
-      (go as any).on('dragend', () => {
+      const onDragEnd = () => {
         this.editorPanel.setAlpha(1);
-      });
+        this.selectItem(null);
+        this.selectItem(item);
+      };
+      (go as any).on('dragend', onDragEnd);
+      (go as any).on('dragEnd', onDragEnd);
 
       (go as any).on('pointerdown', () => {
         this.selectItem(item);
@@ -168,6 +173,7 @@ export default class VisualEditor {
   private selectItem(item: IEditorItem | null) {
     this.updateSelectionRect(item);
     this.buildTweaker(item);
+    this.bringSelectedToTop();
   }
 
   private showToast(message: string) {
@@ -260,6 +266,22 @@ export default class VisualEditor {
 
     this.resizeHandles.forEach((handle, index) => {
       handle.setPosition(points[index].x, points[index].y).setVisible(true);
+    });
+  }
+
+  private bringSelectedToTop() {
+    if (!this.selectedItem) {
+      return;
+    }
+
+    this.scene.children.bringToTop(this.selectedItem.gameObject as Phaser.GameObjects.GameObject);
+
+    if (this.selectionRect) {
+      this.scene.children.bringToTop(this.selectionRect);
+    }
+
+    this.resizeHandles.forEach((handle) => {
+      this.scene.children.bringToTop(handle);
     });
   }
 

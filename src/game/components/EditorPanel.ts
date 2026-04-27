@@ -28,6 +28,8 @@ export default class EditorPanel {
   private selectedItem: IEditorItem | null;
   private dragHandle: Phaser.GameObjects.Graphics | null;
   private dragDots: Phaser.GameObjects.Text | null;
+  private closeButton: Phaser.GameObjects.Text | null;
+  private onCloseSelection: (() => void) | null;
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
@@ -37,6 +39,8 @@ export default class EditorPanel {
     this.selectedItem = null;
     this.dragHandle = null;
     this.dragDots = null;
+    this.closeButton = null;
+    this.onCloseSelection = null;
   }
 
   public setAlpha(alpha: number) {
@@ -48,6 +52,9 @@ export default class EditorPanel {
     }
     if (this.dragDots) {
       this.dragDots.setAlpha(alpha);
+    }
+    if (this.closeButton) {
+      this.closeButton.setAlpha(alpha);
     }
   }
 
@@ -70,10 +77,11 @@ export default class EditorPanel {
     }
 
     const data = item.data;
+    this.onCloseSelection = () => callbacks.onSelectItem(null);
     this.tweaker = this.createTweaker();
     this.selectedItem = item;
 
-    this.addSelectedElementSection(data, callbacks);
+    this.addSelectedElementSection(data);
     this.addTransformSection(item, data, callbacks);
 
     if (data.data.frame) {
@@ -164,18 +172,13 @@ export default class EditorPanel {
     }).setOrigin(0, 0);
   }
 
-  private addSelectedElementSection(data: any, callbacks: IEditorPanelCallbacks) {
+  private addSelectedElementSection(data: any) {
     const itemMeta = {
       name: data.key,
     };
 
     this.tweaker.addFolder({ title: 'Selected element', expanded: true })
-      .addInput(itemMeta, 'name', { title: 'Name', readOnly: true })
-      .addButton({
-        title: 'Close',
-        label: 'х',
-        callback: () => callbacks.onSelectItem(null)
-      });
+      .addInput(itemMeta, 'name', { title: 'Name', readOnly: true });
   }
 
   private addTransformSection(item: IEditorItem, data: any, callbacks: IEditorPanelCallbacks) {
@@ -464,6 +467,21 @@ export default class EditorPanel {
       fontFamily: 'monospace'
     }).setOrigin(0.5);
 
+    const closeButtonX = this.tweaker.x + this.tweakerWidth - 14;
+    const closeButtonY = this.tweaker.y - 14;
+    this.closeButton = this.scene.add.text(closeButtonX, closeButtonY, '✕', {
+      fontSize: '18px',
+      color: '#ff4d4d',
+      fontFamily: 'monospace',
+      backgroundColor: '#4a0000',
+      padding: { x: 6, y: 1 }
+    }).setOrigin(0.5);
+    this.closeButton.setInteractive({ useHandCursor: true });
+    this.closeButton.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
+      pointer.event?.stopPropagation();
+      this.onCloseSelection?.();
+    });
+
     this.dragHandle.on('pointerover', () => this.scene.input.setDefaultCursor('grab'));
     this.dragHandle.on('pointerdown', () => this.scene.input.setDefaultCursor('grabbing'));
     this.dragHandle.on('pointerout', () => this.scene.input.setDefaultCursor('default'));
@@ -485,6 +503,13 @@ export default class EditorPanel {
         clampedY - handleHeight / 2 - 4
       );
     }
+    if (this.closeButton && this.dragHandle) {
+      const handleHeight = (this.dragHandle?.input?.hitArea as Phaser.Geom.Rectangle).height;
+      this.closeButton.setPosition(
+        clampedX + this.tweakerWidth - 14,
+        clampedY - handleHeight / 2 - 4
+      );
+    }
   }
 
   private destroyDragHandle() {
@@ -496,6 +521,11 @@ export default class EditorPanel {
     if (this.dragDots) {
       this.dragDots.destroy();
       this.dragDots = null;
+    }
+
+    if (this.closeButton) {
+      this.closeButton.destroy();
+      this.closeButton = null;
     }
   }
 }
