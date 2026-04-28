@@ -32,8 +32,10 @@ export default class EditorScene extends Phaser.Scene {
     }
 
     if (!config) {
-      config = await this.snapshotConfigGenerator.generateFromQueryParam({ urlParamName: gameUrl });
+      config = await this.snapshotConfigGenerator.generateFromOptions({ urlParamName: gameUrl });
     }
+
+    console.log("Final config used for editor initialization:", config);
 
     if (!config) {
       console.warn("No valid config found in API response and snapshot generation failed. Starting with empty editor.");

@@ -13,7 +13,7 @@ const DEFAULT_OPTIONS: Required<ISnapshotBridgeOptions> = {
   requestType: "GET_PHASER_SNAPSHOT",
   responseType: "PHASER_SNAPSHOT_RESULT",
   readyType: "PHASER_READY",
-  timeoutMs: 10000,
+  timeoutMs: 60000,
   urlParamName: "gameUrl",
   debugParamName: "snapshotDebug"
 };
@@ -25,9 +25,9 @@ export default class SnapshotConfigGenerator {
     this.options = { ...DEFAULT_OPTIONS };
   }
 
-  public async generateFromQueryParam(options: ISnapshotBridgeOptions = {}): Promise<IConfig[] | null> {
+  public async generateFromOptions(options: ISnapshotBridgeOptions = {}): Promise<IConfig[] | null> {
     this.options = { ...this.options, ...options };
-    const gameUrl = this.options.urlParamName;
+    const gameUrl = "http://localhost:10001/application-quiz-1-0.0.0.html?id=019aca40-76e6-7b53-8a13-12486fe1aca8";
     if (!gameUrl) {
       return null;
     }
@@ -36,7 +36,7 @@ export default class SnapshotConfigGenerator {
 
     try {
       const payload = await this.requestSnapshot(gameUrl, debugMode);
-      return this.extractConfig(payload);
+      return (payload as IConfig[] | null) ?? null;
     } catch (_error) {
       return null;
     }
@@ -99,11 +99,6 @@ export default class SnapshotConfigGenerator {
 
         const messageType = (event.data as { type?: string } | null)?.type;
 
-        if (messageType === this.options.readyType) {
-          requestSnapshot();
-          return;
-        }
-
         if (messageType !== this.options.responseType) {
           return;
         }
@@ -133,50 +128,5 @@ export default class SnapshotConfigGenerator {
       iframe.addEventListener("error", onError);
       document.body.appendChild(iframe);
     });
-  }
-
-  private extractConfig(payload: unknown): IConfig[] | null {
-    if (this.isConfigList(payload)) {
-      return payload;
-    }
-
-    if (this.isConfigEnvelope(payload)) {
-      return payload.items;
-    }
-
-    return null;
-  }
-
-  private isConfigEnvelope(payload: unknown): payload is { items: IConfig[] } {
-    if (!payload || typeof payload !== "object") {
-      return false;
-    }
-
-    return this.isConfigList((payload as { items?: unknown }).items);
-  }
-
-  private isConfigList(payload: unknown): payload is IConfig[] {
-    if (!Array.isArray(payload)) {
-      return false;
-    }
-
-    return payload.every((item) => this.isConfig(item));
-  }
-
-  private isConfig(payload: unknown): payload is IConfig {
-    if (!payload || typeof payload !== "object") {
-      return false;
-    }
-
-    const config = payload as IConfig;
-
-    return (
-      typeof config.key === "string"
-      && !!config.position
-      && Number.isFinite(config.position.x)
-      && Number.isFinite(config.position.y)
-      && !!config.data
-      && typeof config.data === "object"
-    );
   }
 }
