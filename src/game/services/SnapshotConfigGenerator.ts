@@ -1,4 +1,4 @@
-import { IConfig } from "../components/interfaces";
+import IGameItemConfig from "../components/interface/GameItemConfig.interface";
 
 interface ISnapshotBridgeOptions {
   requestType?: string;
@@ -25,7 +25,7 @@ export default class SnapshotConfigGenerator {
     this.options = { ...DEFAULT_OPTIONS };
   }
 
-  public async generateFromOptions(options: ISnapshotBridgeOptions = {}): Promise<IConfig[] | null> {
+  public async generateFromOptions(options: ISnapshotBridgeOptions = {}): Promise<IGameItemConfig[][] | null> {
     this.options = { ...this.options, ...options };
     const gameUrl = "http://localhost:10001/application-quiz-1-0.0.0.html?id=019aca40-76e6-7b53-8a13-12486fe1aca8";
     if (!gameUrl) {
@@ -36,7 +36,7 @@ export default class SnapshotConfigGenerator {
 
     try {
       const payload = await this.requestSnapshot(gameUrl, debugMode);
-      return (payload as IConfig[] | null) ?? null;
+      return (payload as IGameItemConfig[][] | null) ?? null;
     } catch (_error) {
       return null;
     }

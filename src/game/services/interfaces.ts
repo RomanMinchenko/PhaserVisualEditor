@@ -1,4 +1,4 @@
-import { IConfig } from "../components/interfaces";
+import IGameItemConfig from "../components/interface/GameItemConfig.interface";
 
 export interface ITitled {
   title: string;
@@ -40,6 +40,6 @@ export interface IApplicationData extends ITitled {
   is_shuffling_questions?: boolean;
   is_tips_needed?: boolean;
   tips?: string;
-  config?: IConfig[];
+  config?: IGameItemConfig[][];
   url: string;
 }

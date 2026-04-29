@@ -4,8 +4,8 @@
       "image": "assets.png",
       "format": "RGBA8888",
       "size": {
-        "w": 2020,
-        "h": 1463
+        "w": 2048,
+        "h": 2034
       },
       "scale": 1,
       "frames": [
@@ -31,7 +31,1183 @@
           }
         },
         {
-          "filename": "blue_task_frame",
+          "filename": "letterPlate",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 120,
+            "h": 128
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 120,
+            "h": 128
+          },
+          "frame": {
+            "x": 1926,
+            "y": 2,
+            "w": 120,
+            "h": 128
+          }
+        },
+        {
+          "filename": "letterPlate_blue",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 120,
+            "h": 128
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 120,
+            "h": 128
+          },
+          "frame": {
+            "x": 1926,
+            "y": 134,
+            "w": 120,
+            "h": 128
+          }
+        },
+        {
+          "filename": "no-btn",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 120,
+            "h": 128
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 120,
+            "h": 128
+          },
+          "frame": {
+            "x": 1926,
+            "y": 266,
+            "w": 120,
+            "h": 128
+          }
+        },
+        {
+          "filename": "yes-btn",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 120,
+            "h": 128
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 120,
+            "h": 128
+          },
+          "frame": {
+            "x": 1926,
+            "y": 398,
+            "w": 120,
+            "h": 128
+          }
+        },
+        {
+          "filename": "dropZone",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 120,
+            "h": 120
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 120,
+            "h": 120
+          },
+          "frame": {
+            "x": 1926,
+            "y": 530,
+            "w": 120,
+            "h": 120
+          }
+        },
+        {
+          "filename": "no-btn_pressed",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 120,
+            "h": 120
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 120,
+            "h": 120
+          },
+          "frame": {
+            "x": 1926,
+            "y": 654,
+            "w": 120,
+            "h": 120
+          }
+        },
+        {
+          "filename": "yes-btn_pressed",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 120,
+            "h": 120
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 120,
+            "h": 120
+          },
+          "frame": {
+            "x": 1926,
+            "y": 778,
+            "w": 120,
+            "h": 120
+          }
+        },
+        {
+          "filename": "answerStar",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 114,
+            "h": 122
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 114,
+            "h": 122
+          },
+          "frame": {
+            "x": 1926,
+            "y": 902,
+            "w": 114,
+            "h": 122
+          }
+        },
+        {
+          "filename": "abc",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 104,
+            "h": 108
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 104,
+            "h": 108
+          },
+          "frame": {
+            "x": 1926,
+            "y": 1028,
+            "w": 104,
+            "h": 108
+          }
+        },
+        {
+          "filename": "dropZone_question",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 360,
+            "h": 264
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 360,
+            "h": 264
+          },
+          "frame": {
+            "x": 2,
+            "y": 1140,
+            "w": 360,
+            "h": 264
+          }
+        },
+        {
+          "filename": "lang_icon",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 48,
+            "h": 50
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 48,
+            "h": 50
+          },
+          "frame": {
+            "x": 2,
+            "y": 1086,
+            "w": 48,
+            "h": 50
+          }
+        },
+        {
+          "filename": "close-button",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 168,
+            "h": 48
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 168,
+            "h": 48
+          },
+          "frame": {
+            "x": 54,
+            "y": 1086,
+            "w": 168,
+            "h": 48
+          }
+        },
+        {
+          "filename": "card_header",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 124,
+            "h": 48
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 124,
+            "h": 48
+          },
+          "frame": {
+            "x": 226,
+            "y": 1086,
+            "w": 124,
+            "h": 48
+          }
+        },
+        {
+          "filename": "space_icon",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 48,
+            "h": 48
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 48,
+            "h": 48
+          },
+          "frame": {
+            "x": 354,
+            "y": 1086,
+            "w": 48,
+            "h": 48
+          }
+        },
+        {
+          "filename": "dropped_items_holder",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 360,
+            "h": 264
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 360,
+            "h": 264
+          },
+          "frame": {
+            "x": 2,
+            "y": 1408,
+            "w": 360,
+            "h": 264
+          }
+        },
+        {
+          "filename": "input_frame",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 446,
+            "h": 120
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 446,
+            "h": 120
+          },
+          "frame": {
+            "x": 2,
+            "y": 1676,
+            "w": 446,
+            "h": 120
+          }
+        },
+        {
+          "filename": "white_input_frame",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 446,
+            "h": 120
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 446,
+            "h": 120
+          },
+          "frame": {
+            "x": 2,
+            "y": 1800,
+            "w": 446,
+            "h": 120
+          }
+        },
+        {
+          "filename": "space",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 552,
+            "h": 108
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 552,
+            "h": 108
+          },
+          "frame": {
+            "x": 2,
+            "y": 1924,
+            "w": 552,
+            "h": 108
+          }
+        },
+        {
+          "filename": "enter",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 312,
+            "h": 108
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 312,
+            "h": 108
+          },
+          "frame": {
+            "x": 558,
+            "y": 1924,
+            "w": 312,
+            "h": 108
+          }
+        },
+        {
+          "filename": "numbers",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 208,
+            "h": 108
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 208,
+            "h": 108
+          },
+          "frame": {
+            "x": 366,
+            "y": 1140,
+            "w": 208,
+            "h": 108
+          }
+        },
+        {
+          "filename": "card_holder",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 44,
+            "h": 44
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 44,
+            "h": 44
+          },
+          "frame": {
+            "x": 406,
+            "y": 1086,
+            "w": 44,
+            "h": 44
+          }
+        },
+        {
+          "filename": "scroll_bg",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 42,
+            "h": 42
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 42,
+            "h": 42
+          },
+          "frame": {
+            "x": 454,
+            "y": 1086,
+            "w": 42,
+            "h": 42
+          }
+        },
+        {
+          "filename": "alphabet_background",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 32,
+            "h": 32
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 32,
+            "h": 32
+          },
+          "frame": {
+            "x": 500,
+            "y": 1086,
+            "w": 32,
+            "h": 32
+          }
+        },
+        {
+          "filename": "shift",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 208,
+            "h": 108
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 208,
+            "h": 108
+          },
+          "frame": {
+            "x": 366,
+            "y": 1252,
+            "w": 208,
+            "h": 108
+          }
+        },
+        {
+          "filename": "backspace",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 104,
+            "h": 108
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 104,
+            "h": 108
+          },
+          "frame": {
+            "x": 366,
+            "y": 1364,
+            "w": 104,
+            "h": 108
+          }
+        },
+        {
+          "filename": "keyboard-button",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 104,
+            "h": 108
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 104,
+            "h": 108
+          },
+          "frame": {
+            "x": 366,
+            "y": 1476,
+            "w": 104,
+            "h": 108
+          }
+        },
+        {
+          "filename": "turn-btn_pressed",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 445,
+            "h": 80
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 445,
+            "h": 80
+          },
+          "frame": {
+            "x": 366,
+            "y": 1588,
+            "w": 445,
+            "h": 80
+          }
+        },
+        {
+          "filename": "space_pressed",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 552,
+            "h": 104
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 552,
+            "h": 104
+          },
+          "frame": {
+            "x": 474,
+            "y": 1364,
+            "w": 552,
+            "h": 104
+          }
+        },
+        {
+          "filename": "enter_pressed",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 312,
+            "h": 104
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 312,
+            "h": 104
+          },
+          "frame": {
+            "x": 474,
+            "y": 1472,
+            "w": 312,
+            "h": 104
+          }
+        },
+        {
+          "filename": "numbers_pressed",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 208,
+            "h": 104
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 208,
+            "h": 104
+          },
+          "frame": {
+            "x": 790,
+            "y": 1472,
+            "w": 208,
+            "h": 104
+          }
+        },
+        {
+          "filename": "shift_pressed",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 208,
+            "h": 104
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 208,
+            "h": 104
+          },
+          "frame": {
+            "x": 1002,
+            "y": 1472,
+            "w": 208,
+            "h": 104
+          }
+        },
+        {
+          "filename": "abc_pressed",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 104,
+            "h": 104
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 104,
+            "h": 104
+          },
+          "frame": {
+            "x": 1214,
+            "y": 1472,
+            "w": 104,
+            "h": 104
+          }
+        },
+        {
+          "filename": "backspace_pressed",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 104,
+            "h": 104
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 104,
+            "h": 104
+          },
+          "frame": {
+            "x": 578,
+            "y": 1140,
+            "w": 104,
+            "h": 104
+          }
+        },
+        {
+          "filename": "keyboard-button_pressed",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 104,
+            "h": 104
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 104,
+            "h": 104
+          },
+          "frame": {
+            "x": 578,
+            "y": 1248,
+            "w": 104,
+            "h": 104
+          }
+        },
+        {
+          "filename": "scroll_bar",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 34,
+            "h": 97
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 34,
+            "h": 97
+          },
+          "frame": {
+            "x": 686,
+            "y": 1140,
+            "w": 34,
+            "h": 97
+          }
+        },
+        {
+          "filename": "turn-btn",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 445,
+            "h": 88
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 445,
+            "h": 88
+          },
+          "frame": {
+            "x": 686,
+            "y": 1241,
+            "w": 445,
+            "h": 88
+          }
+        },
+        {
+          "filename": "button_keyboard",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 168,
+            "h": 88
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 168,
+            "h": 88
+          },
+          "frame": {
+            "x": 724,
+            "y": 1140,
+            "w": 168,
+            "h": 88
+          }
+        },
+        {
+          "filename": "audio_btn",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 80,
+            "h": 88
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 80,
+            "h": 88
+          },
+          "frame": {
+            "x": 896,
+            "y": 1140,
+            "w": 80,
+            "h": 88
+          }
+        },
+        {
+          "filename": "audio_btn_disabled",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 80,
+            "h": 88
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 80,
+            "h": 88
+          },
+          "frame": {
+            "x": 980,
+            "y": 1140,
+            "w": 80,
+            "h": 88
+          }
+        },
+        {
+          "filename": "audio_btn_hover",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 80,
+            "h": 88
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 80,
+            "h": 88
+          },
+          "frame": {
+            "x": 1064,
+            "y": 1140,
+            "w": 80,
+            "h": 88
+          }
+        },
+        {
+          "filename": "number_frame",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 80,
+            "h": 88
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 80,
+            "h": 88
+          },
+          "frame": {
+            "x": 1030,
+            "y": 1333,
+            "w": 80,
+            "h": 88
+          }
+        },
+        {
+          "filename": "button_keyboard_pressed",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 168,
+            "h": 80
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 168,
+            "h": 80
+          },
+          "frame": {
+            "x": 1114,
+            "y": 1333,
+            "w": 168,
+            "h": 80
+          }
+        },
+        {
+          "filename": "audio_btn_pressed",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 80,
+            "h": 80
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 80,
+            "h": 80
+          },
+          "frame": {
+            "x": 1135,
+            "y": 1232,
+            "w": 80,
+            "h": 80
+          }
+        },
+        {
+          "filename": "letter_frame",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 80,
+            "h": 80
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 80,
+            "h": 80
+          },
+          "frame": {
+            "x": 1148,
+            "y": 1140,
+            "w": 80,
+            "h": 80
+          }
+        },
+        {
+          "filename": "shadow",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 80,
+            "h": 80
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 80,
+            "h": 80
+          },
+          "frame": {
+            "x": 1219,
+            "y": 1224,
+            "w": 80,
+            "h": 80
+          }
+        },
+        {
+          "filename": "card_option",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 64,
+            "h": 73
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 64,
+            "h": 73
+          },
+          "frame": {
+            "x": 1232,
+            "y": 1140,
+            "w": 64,
+            "h": 73
+          }
+        },
+        {
+          "filename": "task_frame",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 72,
+            "h": 72
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 72,
+            "h": 72
+          },
+          "frame": {
+            "x": 1300,
+            "y": 1140,
+            "w": 72,
+            "h": 72
+          }
+        },
+        {
+          "filename": "white_card_holder",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 72,
+            "h": 72
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 72,
+            "h": 72
+          },
+          "frame": {
+            "x": 1286,
+            "y": 1308,
+            "w": 72,
+            "h": 72
+          }
+        },
+        {
+          "filename": "card",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 64,
+            "h": 72
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 64,
+            "h": 72
+          },
+          "frame": {
+            "x": 1303,
+            "y": 1384,
+            "w": 64,
+            "h": 72
+          }
+        },
+        {
+          "filename": "letter-frame_green",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 64,
+            "h": 66
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 64,
+            "h": 66
+          },
+          "frame": {
+            "x": 1303,
+            "y": 1216,
+            "w": 64,
+            "h": 66
+          }
+        },
+        {
+          "filename": "letter-frame_red",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 64,
+            "h": 66
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 64,
+            "h": 66
+          },
+          "frame": {
+            "x": 1362,
+            "y": 1286,
+            "w": 64,
+            "h": 66
+          }
+        },
+        {
+          "filename": "letter-frame_white",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 64,
+            "h": 66
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 64,
+            "h": 66
+          },
+          "frame": {
+            "x": 1371,
+            "y": 1216,
+            "w": 64,
+            "h": 66
+          }
+        },
+        {
+          "filename": "letter-frame",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 64,
+            "h": 64
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 64,
+            "h": 64
+          },
+          "frame": {
+            "x": 1376,
+            "y": 1140,
+            "w": 64,
+            "h": 64
+          }
+        },
+        {
+          "filename": "mark_correct",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 64,
+            "h": 64
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 64,
+            "h": 64
+          },
+          "frame": {
+            "x": 452,
+            "y": 1672,
+            "w": 64,
+            "h": 64
+          }
+        },
+        {
+          "filename": "mark_incorrect",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 64,
+            "h": 64
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 64,
+            "h": 64
+          },
+          "frame": {
+            "x": 452,
+            "y": 1740,
+            "w": 64,
+            "h": 64
+          }
+        },
+        {
+          "filename": "dot",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 57,
+            "h": 56
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 57,
+            "h": 56
+          },
+          "frame": {
+            "x": 452,
+            "y": 1808,
+            "w": 57,
+            "h": 56
+          }
+        },
+        {
+          "filename": "card_blue",
           "rotated": false,
           "trimmed": false,
           "sourceSize": {
@@ -45,14 +1221,14 @@
             "h": 52
           },
           "frame": {
-            "x": 1926,
-            "y": 2,
+            "x": 452,
+            "y": 1868,
             "w": 44,
             "h": 52
           }
         },
         {
-          "filename": "green_task_frame",
+          "filename": "card_cyan",
           "rotated": false,
           "trimmed": false,
           "sourceSize": {
@@ -66,14 +1242,14 @@
             "h": 52
           },
           "frame": {
-            "x": 1974,
-            "y": 2,
+            "x": 500,
+            "y": 1868,
             "w": 44,
             "h": 52
           }
         },
         {
-          "filename": "red_task_frame",
+          "filename": "card_orange",
           "rotated": false,
           "trimmed": false,
           "sourceSize": {
@@ -87,8 +1263,71 @@
             "h": 52
           },
           "frame": {
-            "x": 1926,
-            "y": 58,
+            "x": 548,
+            "y": 1868,
+            "w": 44,
+            "h": 52
+          }
+        },
+        {
+          "filename": "card_pink",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 44,
+            "h": 52
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 44,
+            "h": 52
+          },
+          "frame": {
+            "x": 513,
+            "y": 1808,
+            "w": 44,
+            "h": 52
+          }
+        },
+        {
+          "filename": "card_purple",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 44,
+            "h": 52
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 44,
+            "h": 52
+          },
+          "frame": {
+            "x": 561,
+            "y": 1808,
+            "w": 44,
+            "h": 52
+          }
+        },
+        {
+          "filename": "card_red",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 44,
+            "h": 52
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 44,
+            "h": 52
+          },
+          "frame": {
+            "x": 609,
+            "y": 1808,
             "w": 44,
             "h": 52
           }
@@ -98,6 +1337,27 @@
           "rotated": false,
           "trimmed": false,
           "sourceSize": {
+            "w": 64,
+            "h": 72
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 64,
+            "h": 72
+          },
+          "frame": {
+            "x": 1303,
+            "y": 1384,
+            "w": 64,
+            "h": 72
+          }
+        },
+        {
+          "filename": "card_blue_group",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
             "w": 44,
             "h": 52
           },
@@ -108,31 +1368,241 @@
             "h": 52
           },
           "frame": {
-            "x": 1974,
-            "y": 58,
+            "x": 452,
+            "y": 1868,
             "w": 44,
             "h": 52
           }
         },
         {
-          "filename": "image1",
+          "filename": "round_blue",
           "rotated": false,
           "trimmed": false,
           "sourceSize": {
-            "w": 250,
-            "h": 375
+            "w": 44,
+            "h": 52
           },
           "spriteSourceSize": {
             "x": 0,
             "y": 0,
-            "w": 250,
-            "h": 375
+            "w": 44,
+            "h": 52
           },
           "frame": {
-            "x": 2,
-            "y": 1086,
-            "w": 250,
-            "h": 375
+            "x": 452,
+            "y": 1868,
+            "w": 44,
+            "h": 52
+          }
+        },
+        {
+          "filename": "card_cyan_group",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 44,
+            "h": 52
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 44,
+            "h": 52
+          },
+          "frame": {
+            "x": 500,
+            "y": 1868,
+            "w": 44,
+            "h": 52
+          }
+        },
+        {
+          "filename": "round_cyan",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 44,
+            "h": 52
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 44,
+            "h": 52
+          },
+          "frame": {
+            "x": 500,
+            "y": 1868,
+            "w": 44,
+            "h": 52
+          }
+        },
+        {
+          "filename": "card_orange_group",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 44,
+            "h": 52
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 44,
+            "h": 52
+          },
+          "frame": {
+            "x": 548,
+            "y": 1868,
+            "w": 44,
+            "h": 52
+          }
+        },
+        {
+          "filename": "round_orange",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 44,
+            "h": 52
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 44,
+            "h": 52
+          },
+          "frame": {
+            "x": 548,
+            "y": 1868,
+            "w": 44,
+            "h": 52
+          }
+        },
+        {
+          "filename": "card_pink_group",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 44,
+            "h": 52
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 44,
+            "h": 52
+          },
+          "frame": {
+            "x": 513,
+            "y": 1808,
+            "w": 44,
+            "h": 52
+          }
+        },
+        {
+          "filename": "round_pink",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 44,
+            "h": 52
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 44,
+            "h": 52
+          },
+          "frame": {
+            "x": 513,
+            "y": 1808,
+            "w": 44,
+            "h": 52
+          }
+        },
+        {
+          "filename": "card_purple_group",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 44,
+            "h": 52
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 44,
+            "h": 52
+          },
+          "frame": {
+            "x": 561,
+            "y": 1808,
+            "w": 44,
+            "h": 52
+          }
+        },
+        {
+          "filename": "round_purple",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 44,
+            "h": 52
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 44,
+            "h": 52
+          },
+          "frame": {
+            "x": 561,
+            "y": 1808,
+            "w": 44,
+            "h": 52
+          }
+        },
+        {
+          "filename": "card_red_group",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 44,
+            "h": 52
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 44,
+            "h": 52
+          },
+          "frame": {
+            "x": 609,
+            "y": 1808,
+            "w": 44,
+            "h": 52
+          }
+        },
+        {
+          "filename": "round_red",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 44,
+            "h": 52
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 44,
+            "h": 52
+          },
+          "frame": {
+            "x": 609,
+            "y": 1808,
+            "w": 44,
+            "h": 52
           }
         }
       ]
@@ -140,6 +1610,6 @@
   ],
   "meta": {
     "app": "http://github.com/odrick/free-tex-packer-core",
-    "version": "0.3.5"
+    "version": "0.3.4"
   }
 }

@@ -1,4 +1,6 @@
-import { IConfig } from "./interfaces";
+import IGameItemConfig from "./interface/GameItemConfig.interface";
+import IGameItemDataConfig from "./interface/GameItemDataConfig.interface";
+
 
 interface IUploadedImageRecord {
   id: string;
@@ -78,8 +80,9 @@ export default class UploadedImageManager {
     return record;
   }
 
-  public applyImageToConfig(config: IConfig, imageId: string) {
-    if (!config.data.frame) {
+  public applyImageToConfig(config: IGameItemConfig, imageId: string) {
+    const dataConfig = config.data as IGameItemDataConfig;
+    if (!dataConfig.frame) {
       return;
     }
 
@@ -88,8 +91,10 @@ export default class UploadedImageManager {
       return;
     }
 
-    config.data.frame.value = imageRecord.textureKey;
-    config.data.frame.sourceImageId = imageRecord.id;
+    dataConfig.frame.value = imageRecord.textureKey;
+    if ('sourceImageId' in dataConfig.frame) {
+      (dataConfig.frame as any).sourceImageId = imageRecord.id;
+    }
   }
 
   public getImageForComponent(componentKey: string): IUploadedImageRecord | null {

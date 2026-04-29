@@ -1,7 +1,7 @@
-import { IConfig } from "./interfaces";
+import IGameItemConfig from "./interface/GameItemConfig.interface";
 
 export interface IEditorItem {
-  cfg: IConfig;
+  cfg: IGameItemConfig;
   gameObject: Phaser.GameObjects.Graphics | Phaser.GameObjects.GameObject;
   data: any;
 }

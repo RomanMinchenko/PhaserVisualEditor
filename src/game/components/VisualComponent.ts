@@ -1,13 +1,14 @@
-import { IConfig } from "./interfaces";
+import IGameItemConfig from "./interface/GameItemConfig.interface";
+import IGameItemDataConfig from "./interface/GameItemDataConfig.interface";
 
 export default class VisualComponent extends Phaser.GameObjects.Container {
   public spriteView: Phaser.GameObjects.Sprite | Phaser.GameObjects.NineSlice;
   public textView: Phaser.GameObjects.Text;
-  private config: IConfig;
+  private config: IGameItemConfig;
   private children: VisualComponent[] = [];
 
-  constructor(scene: Phaser.Scene, config: IConfig) {
-    super(scene, config.position.x, config.position.y);
+  constructor(scene: Phaser.Scene, config: IGameItemConfig) {
+    super(scene, config.position?.x ?? 0, config.position?.y ?? 0);
 
     this.config = config;
 
@@ -18,7 +19,7 @@ export default class VisualComponent extends Phaser.GameObjects.Container {
     return this.children;
   }
 
-  public getConfig(): IConfig {
+  public getConfig(): IGameItemConfig {
     return this.config;
   }
 
@@ -29,7 +30,7 @@ export default class VisualComponent extends Phaser.GameObjects.Container {
   }
 
   private initFrame() {
-    const frame = this.config.data.frame;
+    const frame = (this.config.data as IGameItemDataConfig).frame;
     if (!frame) return;
 
     if (frame.nineSlice) {
@@ -43,19 +44,16 @@ export default class VisualComponent extends Phaser.GameObjects.Container {
   }
 
   private initText() {
-    const text = this.config.data.text;
+    const text = (this.config.data as IGameItemDataConfig).text;
     if (!text) return;
 
-    const txt = this.scene.add.text(0, 0, text.value, { ...text.style, align: 'center' });
+    const txt = this.scene.add.text(0, 0, text.value, { ...text.text_style?.style, align: 'center' });
     txt.setOrigin(0.5);
-    if (text.wordWrap) {
-      txt.setWordWrapWidth(text.wordWrap.width, text.wordWrap.useAdvancedWrap);
-    }
     this.textView = txt;
     this.add(this.textView);
   }
 
-  private initChildren(children: IConfig[]) {
+  private initChildren(children: IGameItemConfig[]) {
     children.forEach(childCfg => {
       const child = new VisualComponent(this.scene, childCfg);
       this.add(child);

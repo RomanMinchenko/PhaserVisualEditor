@@ -1,7 +1,9 @@
-import { IConfig } from "./interfaces";
 import VisualComponent from "./VisualComponent";
 import EditorPanel, { IEditorItem } from "./EditorPanel";
 import UploadedImageManager from "./UploadedImageManager";
+import PageNavigationUI from "./PageNavigationUI";
+import IGameItemConfig from "./interface/GameItemConfig.interface";
+import IGameItemDataConfig from "./interface/GameItemDataConfig.interface";
 
 export default class VisualEditor {
   public panelTitle: Phaser.GameObjects.Text | null;
@@ -21,8 +23,10 @@ export default class VisualEditor {
   } | null;
   private panelHint: Phaser.GameObjects.Text | null;
   private uploadedImageManager: UploadedImageManager;
+  private pages: IGameItemConfig[][];
+  private currentPageIndex: number;
 
-  constructor(scene: Phaser.Scene, config: IConfig[]) {
+  constructor(scene: Phaser.Scene, pagesConfig: IGameItemConfig[][]) {
     this.scene = scene;
     this.items = [];
     this.editorPanel = new EditorPanel(scene);
@@ -33,12 +37,23 @@ export default class VisualEditor {
     this.panelTitle = null;
     this.panelHint = null;
     this.uploadedImageManager = new UploadedImageManager(scene);
+    this.pages = this.normalizePages(pagesConfig);
+    this.currentPageIndex = 0;
 
     this.initBg();
     this.createSelectionRect();
     this.buildPanel();
-    this.spawnItems(config);
+    this.spawnItems(this.pages[this.currentPageIndex]);
+    this.createPageNavigation();
     this.setupPanelAutoClose();
+  }
+
+  private normalizePages(pagesConfig: IGameItemConfig[][]): IGameItemConfig[][] {
+    if (!pagesConfig || pagesConfig.length === 0) {
+      return [[]];
+    }
+
+    return pagesConfig;
   }
 
   private initBg() {
@@ -107,34 +122,19 @@ export default class VisualEditor {
     };
   }
 
-  private spawnItems(config: IConfig[]) {
+  private spawnItems(config: IGameItemConfig[]) {
     const scene = this.scene;
     const dragPlugin = scene.plugins.get('rexDrag');
 
     config.forEach((cfg) => {
+      this.normalizeItemConfig(cfg);
       const go = new VisualComponent(scene, cfg);
       const { width, height } = go.getBounds();
       go.setSize(width, height);
       this.scene.add.existing(go);
       this.updateInteractiveZone(go, width, height);
 
-      const data: IConfig = {
-        key: cfg.key,
-        position: { x: cfg.position.x, y: cfg.position.y },
-        data: {
-          frame: {
-            value: cfg.data.frame?.value || '',
-            nineSlice: cfg.data.frame?.nineSlice || undefined,
-            size: cfg.data.frame?.size || undefined
-          },
-          text: cfg.data.text ? {
-            value: cfg.data.text?.value || '',
-            style: { fontSize: 20, fontFamily: 'monospace', color: '#ffffff' },
-            wordWrap: { width: 120, useAdvancedWrap: true }
-          } : undefined
-        },
-        children: cfg.children || undefined
-      };
+      const data: IGameItemConfig = cfg;
 
       const item = { cfg, gameObject: go, data };
       const itemChildren = go.getChildren()
@@ -151,6 +151,7 @@ export default class VisualEditor {
       });
 
       (go as any).on('drag', () => {
+        data.position = data.position || { x: 0, y: 0 };
         data.position.x = Math.round((go as any).x);
         data.position.y = Math.round((go as any).y);
         this.editorPanel.setAlpha(0.1);
@@ -169,6 +170,54 @@ export default class VisualEditor {
         this.selectItem(item);
       });
     });
+  }
+
+  private createPageNavigation() {
+    new PageNavigationUI(this.scene, {
+      totalPages: this.pages.length,
+      onPageChange: (pageIndex: number) => this.switchPage(pageIndex)
+    });
+  }
+
+  private normalizeItemConfig(config: IGameItemConfig) {
+    const data = config.data as IGameItemDataConfig;
+    if (data.text && data.text.text_style) {
+      if (!data.text.text_style.style) {
+        data.text.text_style.style = { fontSize: 20, fontFamily: "monospace", color: "#ffffff" };
+      }
+
+      data.text.wordWrap = {
+        width: (data.text.text_style.style as any).wordWrapWidth,
+        useAdvancedWrap: (data.text.text_style.style as any).wordWrapUseAdvanced
+      };
+    }
+
+    if (config.children?.length) {
+      config.children.forEach((childConfig) => this.normalizeItemConfig(childConfig));
+    }
+  }
+
+  private switchPage(pageIndex: number) {
+    if (pageIndex === this.currentPageIndex || pageIndex < 0 || pageIndex >= this.pages.length) {
+      return;
+    }
+
+    this.clearCurrentPage();
+    this.currentPageIndex = pageIndex;
+    this.spawnItems(this.pages[this.currentPageIndex]);
+    this.buildTweaker(null);
+  }
+
+  private clearCurrentPage() {
+    this.selectItem(null);
+    this.items.forEach((item) => {
+      if (!item.gameObject.scene) {
+        return;
+      }
+      item.gameObject.removeAllListeners();
+      item.gameObject.destroy();
+    });
+    this.items = [];
   }
 
   private selectItem(item: IEditorItem | null) {
@@ -219,7 +268,7 @@ export default class VisualEditor {
   public async exportJSON() {
     const uploadedImages = await this.uploadedImageManager.uploadAll();
     return {
-      items: this.items.map(({ data }) => data),
+      items: this.pages,
       uploadedImages
     };
   }
