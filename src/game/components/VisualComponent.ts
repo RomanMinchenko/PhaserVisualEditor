@@ -33,13 +33,22 @@ export default class VisualComponent extends Phaser.GameObjects.Container {
     const frame = (this.config.data as IGameItemDataConfig).frame;
     if (!frame) return;
 
-    if (frame.nineSlice) {
-      this.spriteView = this.scene.add.nineslice(0, 0, "assets", frame.value, frame.nineSlice.width, frame.nineSlice.height, frame.nineSlice.left, frame.nineSlice.right, frame.nineSlice.top, frame.nineSlice.bottom);
+    const atlasKey = "assets";
+    const hasAtlasFrame = this.scene.textures.exists(atlasKey) && this.scene.textures.get(atlasKey).has(frame.value);
+    const textureKey = hasAtlasFrame ? atlasKey : frame.value;
+
+    if (frame.nineSlice && hasAtlasFrame) {
+      this.spriteView = this.scene.add.nineslice(0, 0, atlasKey, frame.value, frame.nineSlice.width, frame.nineSlice.height, frame.nineSlice.left, frame.nineSlice.right, frame.nineSlice.top, frame.nineSlice.bottom);
     } else {
-      this.spriteView = this.scene.add.sprite(0, 0, "assets", frame.value);
+      this.spriteView = this.scene.add.sprite(0, 0, textureKey, hasAtlasFrame ? frame.value : undefined);
       this.spriteView.setDisplaySize(frame.size?.width || this.spriteView.width, frame.size?.height || this.spriteView.height);
     }
-    this.spriteView.setOrigin(0.5);
+
+    const frameScale = typeof frame.scale === "number" ? { x: frame.scale, y: frame.scale } : frame.scale;
+    frame.scale && this.spriteView.setScale(frameScale?.x ?? 1, frameScale?.y ?? 1);
+    frame.origin && this.spriteView.setOrigin(frame.origin.x, frame.origin.y);
+    frame.position && this.spriteView.setPosition(frame.position.x, frame.position.y);
+
     this.add(this.spriteView);
   }
 
@@ -47,8 +56,11 @@ export default class VisualComponent extends Phaser.GameObjects.Container {
     const text = (this.config.data as IGameItemDataConfig).text;
     if (!text) return;
 
-    const txt = this.scene.add.text(0, 0, text.value, { ...text.text_style?.style, align: 'center' });
-    txt.setOrigin(0.5);
+    const txt = this.scene.add.text(0, 0, text.value, text.text_style?.style);
+    text.text_style?.shadow && txt.setShadow(text.text_style.shadow.offset.x, text.text_style.shadow.offset.y, text.text_style.shadow.color);
+    text.wordWrap?.width && txt.setWordWrapWidth(text.wordWrap.width, text.wordWrap.useAdvancedWrap);
+    text.origin && txt.setOrigin(text.origin.x, text.origin.y);
+    text.position && txt.setPosition(text.position.x, text.position.y);
     this.textView = txt;
     this.add(this.textView);
   }
