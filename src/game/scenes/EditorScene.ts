@@ -11,6 +11,10 @@ export default class EditorScene extends Phaser.Scene {
   private applicationData: IApplicationData | null = null;
   private applicationConfigLoaded = false;
   private isApplicationAssetsLoaded = false;
+  private loadedGoogleFonts = new Set<string>();
+
+  private readonly DEFAULT_FONT_WEIGHT = 400;
+  private readonly BOLD_FONT_WEIGHT = 700;
 
   constructor() {
     super({ key: 'EditorScene' });
@@ -115,7 +119,127 @@ export default class EditorScene extends Phaser.Scene {
       return;
     }
 
-    this.editor = new VisualEditor(this, this.normalizeToPages(config));
+    const googleFonts = await this.loadFontsFromConfig(config);
+    this.editor = new VisualEditor(this, this.normalizeToPages(config), googleFonts);
+  }
+
+
+  private async loadFontsFromConfig(config: IGameItemConfig[][]): Promise<string[]> {
+    const discoveredFonts = this.extractGoogleFonts(config);
+
+    if (discoveredFonts.size === 0) {
+      return [];
+    }
+
+    await Promise.all([...discoveredFonts.entries()].map(([fontName, weights]) => this.loadGoogleFont(fontName, [...weights])));
+
+    return [...discoveredFonts.keys()];
+  }
+
+  private extractGoogleFonts(config: IGameItemConfig[][]): Map<string, Set<number>> {
+    const fonts = new Map<string, Set<number>>();
+
+    const addFont = (fontName: string, fontStyle?: string) => {
+      const normalizedName = fontName?.trim();
+      if (!normalizedName) {
+        return;
+      }
+
+      if (!fonts.has(normalizedName)) {
+        fonts.set(normalizedName, new Set<number>());
+      }
+
+      const fontWeight = this.resolveFontWeight(fontStyle);
+      fonts.get(normalizedName)?.add(fontWeight);
+    };
+
+    const visitItem = (item: any) => {
+      if (!item || typeof item !== "object") {
+        return;
+      }
+
+      const rawFonts = item.googleFonts;
+      if (Array.isArray(rawFonts)) {
+        rawFonts.forEach((fontEntry: unknown) => {
+          if (typeof fontEntry === "string" && fontEntry.trim()) {
+            addFont(fontEntry.trim());
+            return;
+          }
+
+          if (fontEntry && typeof fontEntry === "object") {
+            const title = (fontEntry as { title?: string }).title;
+            if (title?.trim()) {
+              addFont(title.trim());
+            }
+          }
+        });
+      }
+
+      const textStyle = item?.data?.text?.text_style?.style;
+      const textFontFamily = textStyle?.fontFamily;
+      if (typeof textFontFamily === "string" && textFontFamily.trim()) {
+        addFont(textFontFamily.trim(), textStyle?.fontStyle);
+      }
+
+      if (Array.isArray(item.children)) {
+        item.children.forEach((child: any) => visitItem(child));
+      }
+    };
+
+    config.forEach((page) => {
+      page.forEach((item) => visitItem(item));
+    });
+
+    return fonts;
+  }
+
+  private resolveFontWeight(fontStyle?: string): number {
+    if (!fontStyle?.trim()) {
+      return this.DEFAULT_FONT_WEIGHT;
+    }
+
+    const style = fontStyle.toLowerCase();
+    const numericWeightMatch = style.match(/\b([1-9]00)\b/);
+    if (numericWeightMatch) {
+      return Number(numericWeightMatch[1]);
+    }
+
+    if (style.includes("bold")) {
+      return this.BOLD_FONT_WEIGHT;
+    }
+
+    return this.DEFAULT_FONT_WEIGHT;
+  }
+
+  private loadGoogleFont(fontName: string, weights: number[] = [this.DEFAULT_FONT_WEIGHT]): Promise<void> {
+    if (this.loadedGoogleFonts.has(fontName)) {
+      return Promise.resolve();
+    }
+
+    this.loadedGoogleFonts.add(fontName);
+
+    if (typeof document === "undefined") {
+      return Promise.resolve();
+    }
+
+    const uniqueWeights = [...new Set(weights)].sort((a, b) => a - b);
+    const fontId = `google-font-${fontName.replace(/[^a-z0-9]/gi, "-").toLowerCase()}-${uniqueWeights.join("-")}`;
+
+    if (!document.getElementById(fontId)) {
+      const link = document.createElement("link");
+      link.id = fontId;
+      link.rel = "stylesheet";
+      link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(fontName).replace(/%20/g, "+")}:wght@${uniqueWeights.join(";")}&display=swap`;
+      document.head.appendChild(link);
+    }
+
+    if (!document.fonts?.load) {
+      return Promise.resolve();
+    }
+
+    return Promise.all(uniqueWeights.map((weight) => document.fonts.load(`${weight} 16px "${fontName}"`)))
+      .then(() => undefined)
+      .catch(() => undefined);
   }
 
   private normalizeToPages(config: IGameItemConfig[][] | null): IGameItemConfig[][] {

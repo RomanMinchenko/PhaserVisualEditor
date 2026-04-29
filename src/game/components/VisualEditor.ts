@@ -25,8 +25,9 @@ export default class VisualEditor {
   private uploadedImageManager: UploadedImageManager;
   private pages: IGameItemConfig[][];
   private currentPageIndex: number;
+  private readonly availableGoogleFonts: string[];
 
-  constructor(scene: Phaser.Scene, pagesConfig: IGameItemConfig[][]) {
+  constructor(scene: Phaser.Scene, pagesConfig: IGameItemConfig[][], availableGoogleFonts: string[] = []) {
     this.scene = scene;
     this.items = [];
     this.editorPanel = new EditorPanel(scene);
@@ -39,6 +40,7 @@ export default class VisualEditor {
     this.uploadedImageManager = new UploadedImageManager(scene);
     this.pages = this.normalizePages(pagesConfig);
     this.currentPageIndex = 0;
+    this.availableGoogleFonts = availableGoogleFonts;
 
     this.initBg();
     this.createSelectionRect();
@@ -100,7 +102,7 @@ export default class VisualEditor {
       return;
     }
     this.panelHint?.setVisible(false);
-    this.editorPanel.build(item, this.items, callbacks);
+    this.editorPanel.build(item, this.items, callbacks, this.availableGoogleFonts);
   }
 
   private getPanelCallbacks() {

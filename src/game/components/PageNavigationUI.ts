@@ -56,7 +56,7 @@ export default class PageNavigationUI {
   }
 
   private updateLabel() {
-    this.pageLabel.setText(`< ${this.currentPage + 1} з ${this.totalPages} >`);
+    this.pageLabel.setText(`${this.currentPage + 1} з ${this.totalPages}`);
     this.leftArrow.setAlpha(this.currentPage > 0 ? 1 : 0.35);
     this.rightArrow.setAlpha(this.currentPage < this.totalPages - 1 ? 1 : 0.35);
   }

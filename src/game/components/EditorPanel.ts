@@ -56,7 +56,7 @@ export default class EditorPanel {
     this.tweakerWidth = PANEL_WIDTH - TWEAKER_WIDTH_OFFSET;
   }
 
-  public build(item: IEditorItem | null, items: IEditorItem[], callbacks: IEditorPanelCallbacks) {
+  public build(item: IEditorItem | null, items: IEditorItem[], callbacks: IEditorPanelCallbacks, availableGoogleFonts: string[] = []) {
     if (item?.cfg.key === this.selectedItem?.cfg.key && this.tweaker) return;
 
     if (this.tweaker) {
@@ -81,7 +81,7 @@ export default class EditorPanel {
     }
 
     if (data.data.text) {
-      this.addTypographySection(item, data, callbacks);
+      this.addTypographySection(item, data, callbacks, availableGoogleFonts);
     }
 
     if (data.children?.length) {
@@ -323,46 +323,40 @@ export default class EditorPanel {
     }
   }
 
-  private addTypographySection(item: IEditorItem, data: any, callbacks: IEditorPanelCallbacks) {
+  private addTypographySection(item: IEditorItem, data: any, callbacks: IEditorPanelCallbacks, availableGoogleFonts: string[]) {
     const typographyFolder = this.tweaker.addFolder({ title: 'Typography', expanded: true });
 
-    typographyFolder.addInput(data.data.text.style, 'fontSize', {
+    typographyFolder.addInput(data.data.text.text_style.style, 'fontSize', {
       title: 'Font size',
       min: 4, max: 48, step: 1,
       monitor: true,
       onValueChange: (value: number) => {
         const textData = data.data.text as any;
-        textData.style.fontSize = value;
+        textData.text_style.style.fontSize = value;
         (item.gameObject as any).textView.setStyle({ fontSize: value });
         callbacks.onUpdateSelectionRect(item);
       }
     });
 
-    typographyFolder.addInput(data.data.text.style, 'fontFamily', {
+    typographyFolder.addInput(data.data.text.text_style.style, 'fontFamily', {
       title: 'Font family',
-      options: [
-        { value: 'monospace', text: 'Monospace' },
-        { value: 'Arial', text: 'Arial' },
-        { value: 'Georgia', text: 'Georgia' },
-        { value: 'Times New Roman', text: 'Times New Roman' },
-        { value: 'Courier New', text: 'Courier New' }
-      ],
+      options: this.getFontFamilyOptions(availableGoogleFonts),
       monitor: true,
       onValueChange: (value: string) => {
         const textData = data.data.text as any;
-        textData.style.fontFamily = value;
+        textData.text_style.style.fontFamily = value;
         (item.gameObject as any).textView.setStyle({ fontFamily: value });
         callbacks.onUpdateSelectionRect(item);
       }
     });
 
-    typographyFolder.addInput(data.data.text.style, 'color', {
+    typographyFolder.addInput(data.data.text.text_style.style, 'color', {
       title: 'Color',
       view: 'color',
       monitor: true,
       onValueChange: (value: number) => {
         const textData = data.data.text as any;
-        textData.style.color = `#${value.toString(16).padStart(6, '0')}`;
+        textData.text_style.style.color = `#${value.toString(16).padStart(6, '0')}`;
         (item.gameObject as any).textView.setStyle({ color: `#${value.toString(16).padStart(6, '0')}` });
         callbacks.onUpdateSelectionRect(item);
       }
@@ -408,6 +402,37 @@ export default class EditorPanel {
         }
       });
     });
+  }
+
+  private getFontFamilyOptions(availableGoogleFonts: string[]) {
+    const defaultFonts = [
+      { value: 'monospace', text: 'Monospace' },
+      { value: 'Arial', text: 'Arial' },
+      { value: 'Georgia', text: 'Georgia' },
+      { value: 'Times New Roman', text: 'Times New Roman' },
+      { value: 'Courier New', text: 'Courier New' }
+    ];
+
+    const existingValues = new Set(defaultFonts.map((font) => font.value.toLowerCase()));
+
+    const googleFonts = availableGoogleFonts
+      .filter((fontName) => !!fontName?.trim())
+      .map((fontName) => fontName.trim())
+      .filter((fontName) => {
+        const key = fontName.toLowerCase();
+        if (existingValues.has(key)) {
+          return false;
+        }
+
+        existingValues.add(key);
+        return true;
+      })
+      .map((fontName) => ({
+        value: fontName,
+        text: `${fontName} (Google)`
+      }));
+
+    return [...defaultFonts, ...googleFonts];
   }
 
   private addActionsSection(callbacks: IEditorPanelCallbacks) {
