@@ -28,6 +28,7 @@ export default class EditorPanel {
   private selectedItem: IEditorItem | null;
   private dragHandle: Phaser.GameObjects.Graphics | null;
   private dragDots: Phaser.GameObjects.Text | null;
+  private readonly loadedGoogleFonts: Set<string>;
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
@@ -37,6 +38,7 @@ export default class EditorPanel {
     this.selectedItem = null;
     this.dragHandle = null;
     this.dragDots = null;
+    this.loadedGoogleFonts = new Set<string>();
   }
 
   public setAlpha(alpha: number) {
@@ -342,10 +344,16 @@ export default class EditorPanel {
       title: 'Font family',
       options: this.getFontFamilyOptions(availableGoogleFonts),
       monitor: true,
-      onValueChange: (value: string) => {
+      onValueChange: async (value: string) => {
         const textData = data.data.text as any;
-        textData.text_style.style.fontFamily = value;
-        (item.gameObject as any).textView.setStyle({ fontFamily: value });
+        const selectedFontFamily = value?.trim() || 'monospace';
+
+        if (availableGoogleFonts.some((fontName) => fontName.toLowerCase() === selectedFontFamily.toLowerCase())) {
+          await this.loadGoogleFont(selectedFontFamily);
+        }
+
+        textData.text_style.style.fontFamily = selectedFontFamily;
+        (item.gameObject as any).textView.setStyle({ fontFamily: selectedFontFamily });
         callbacks.onUpdateSelectionRect(item);
       }
     });
@@ -433,6 +441,40 @@ export default class EditorPanel {
       }));
 
     return [...defaultFonts, ...googleFonts];
+  }
+
+  private loadGoogleFont(fontName: string): Promise<void> {
+    const normalizedFontName = fontName?.trim();
+    if (!normalizedFontName || this.loadedGoogleFonts.has(normalizedFontName)) {
+      return Promise.resolve();
+    }
+
+    this.loadedGoogleFonts.add(normalizedFontName);
+
+    if (typeof document === "undefined") {
+      return Promise.resolve();
+    }
+
+    const fontId = `google-font-${normalizedFontName.replace(/[^a-z0-9]/gi, "-").toLowerCase()}`;
+
+    if (!document.getElementById(fontId)) {
+      const link = document.createElement("link");
+      link.id = fontId;
+      link.rel = "stylesheet";
+      link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(normalizedFontName).replace(/%20/g, "+")}:wght@400;700&display=swap`;
+      document.head.appendChild(link);
+    }
+
+    if (!document.fonts?.load) {
+      return Promise.resolve();
+    }
+
+    return Promise.all([
+      document.fonts.load(`400 16px "${normalizedFontName}"`),
+      document.fonts.load(`700 16px "${normalizedFontName}"`)
+    ])
+      .then(() => undefined)
+      .catch(() => undefined);
   }
 
   private addActionsSection(callbacks: IEditorPanelCallbacks) {
