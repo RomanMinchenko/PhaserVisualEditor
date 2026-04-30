@@ -370,7 +370,7 @@ export default class EditorPanel {
       }
     });
 
-    if (data.data.text.wordWrap) {
+    if (data.data.text.wordWrap.width) {
       const textLayoutFolder = typographyFolder.addFolder({ title: 'Text layout', expanded: true });
 
       textLayoutFolder.addInput(data.data.text.wordWrap, 'width', {

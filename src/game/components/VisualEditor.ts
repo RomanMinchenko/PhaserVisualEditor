@@ -126,7 +126,6 @@ export default class VisualEditor {
 
   private spawnItems(config: IGameItemConfig[]) {
     const scene = this.scene;
-    const dragPlugin = scene.plugins.get('rexDrag');
 
     config.forEach((cfg) => {
       this.normalizeItemConfig(cfg);
@@ -139,38 +138,54 @@ export default class VisualEditor {
       const data: IGameItemConfig = cfg;
 
       const item = { cfg, gameObject: go, data };
-      const itemChildren = go.getChildren()
-        .map((child: VisualComponent) => {
+      this.items.push(item);
+      this.setupEditableItem(item);
+
+      const registerChildren = (parent: VisualComponent) => {
+        parent.getChildren().forEach((child: VisualComponent) => {
           const childCfg = child.getConfig();
-          return { cfg: childCfg, gameObject: child, data: childCfg };
+          const childBounds = child.getBounds();
+          child.setSize(childBounds.width, childBounds.height);
+          this.updateInteractiveZone(child, childBounds.width, childBounds.height);
+          const childItem = { cfg: childCfg, gameObject: child, data: childCfg };
+          this.items.push(childItem);
+          this.setupEditableItem(childItem);
+          registerChildren(child);
         });
-      this.items.push(item, ...itemChildren);
-
-      (go as any).setInteractive({ useHandCursor: true });
-      (dragPlugin as any).add(go);
-
-      (go as any).on('dragstart', () => {
-      });
-
-      (go as any).on('drag', () => {
-        data.position = data.position || { x: 0, y: 0 };
-        data.position.x = Math.round((go as any).x);
-        data.position.y = Math.round((go as any).y);
-        this.editorPanel.setAlpha(0.1);
-        this.updateSelectionRect(item);
-      });
-
-      const onDragEnd = () => {
-        this.editorPanel.setAlpha(1);
-        this.selectItem(null);
-        this.selectItem(item);
       };
-      (go as any).on('dragend', onDragEnd);
-      (go as any).on('dragEnd', onDragEnd);
+      registerChildren(go);
+    });
+  }
 
-      (go as any).on('pointerdown', () => {
-        this.selectItem(item);
-      });
+  private setupEditableItem(item: IEditorItem) {
+    const go = item.gameObject as any;
+    const dragPlugin = this.scene.plugins.get('rexDrag');
+
+    const bounds = go.getBounds();
+    if (!go.input) {
+      go.setSize(bounds.width, bounds.height);
+      this.updateInteractiveZone(go, bounds.width, bounds.height);
+    }
+    go.input.cursor = 'pointer';
+    (dragPlugin as any).add(go);
+
+    go.on('drag', () => {
+      item.data.position = item.data.position || { x: 0, y: 0 };
+      item.data.position.x = Math.round(go.x);
+      item.data.position.y = Math.round(go.y);
+      this.editorPanel.setAlpha(0.1);
+      this.updateSelectionRect(item);
+    });
+
+    const onDragEnd = () => {
+      this.editorPanel.setAlpha(1);
+      this.selectItem(item);
+    };
+    go.on('dragend', onDragEnd);
+    go.on('dragEnd', onDragEnd);
+
+    go.on('pointerdown', () => {
+      this.selectItem(item);
     });
   }
 
@@ -237,8 +252,11 @@ export default class VisualEditor {
       const clickedEditorItem = currentlyOver.some((gameObject) =>
         this.items.some((item) => item.gameObject === gameObject)
       );
+      const clickedResizeHandle = currentlyOver.some((gameObject) =>
+        this.resizeHandles.includes(gameObject as Phaser.GameObjects.Rectangle)
+      );
 
-      if (clickedEditorItem || this.editorPanel.isPointerInside(pointer)) {
+      if (clickedEditorItem || clickedResizeHandle || this.editorPanel.isPointerInside(pointer)) {
         return;
       }
 

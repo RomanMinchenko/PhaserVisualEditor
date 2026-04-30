@@ -1,9 +1,9 @@
-import GameItemDataConfig from "../type/GameItemDataConfig";
+import IGameItemDataConfig from "../type/GameItemDataConfig";
 
 interface IGameItemConfig {
   type: string,
   key: string,
-  data: GameItemDataConfig,
+  data: IGameItemDataConfig,
   children?: Array<IGameItemConfig> | null,
   position?: {
     x: number,
